@@ -2,6 +2,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import FirebaseContext from '../context/firebase';
 import * as ROUTES from '../constants/routes';
+import doesUsernameExist from '../services/firebase';
 
 const SignUp = (props) => {
   const history = useHistory();
@@ -21,12 +22,48 @@ const SignUp = (props) => {
 
   const handleSignUp = async (event) => {
     event.preventDefault();
+
+    const usernameExists = await doesUsernameExist(username);
+
+    if (!usernameExists) {
+      try {
+        const createdUserResult = await firebase
+          .auth()
+          .createUserWithEmailAndPassword(emailAddress, password);
+
+        //authentication
+        // -> emailAddress & password & username (displayName)
+        await createdUserResult.user.updateProfile({
+          display: username,
+        });
+
+        // firebase user collection (create a document)
+        await firebase.firestore().collection('users').add({
+          userId: createdUserResult.user.uid,
+          username: username.toLocaleLowerCase(),
+          fullName,
+          emailAddress: emailAddress.toLocaleLowerCase(),
+          following: [],
+          dateCreated: Date.now(),
+        });
+
+        history.push(ROUTES.DASHBOARD);
+      } catch (error) {
+        setFullName('');
+        setEmailAddress('');
+        setPassword('');
+        setError(error.message);
+      }
+    } else {
+      setError('No luck today :( that username already exist, try another');
+    }
+
+    // try {
+    // } catch (error) {}
   };
 
   useEffect(() => {
     document.title = 'Sign Up - Instagram';
-    try {
-    } catch (error) {}
   }, []);
 
   return (
