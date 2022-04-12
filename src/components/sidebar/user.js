@@ -1,4 +1,3 @@
-import { memo } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Skeleton from 'react-loading-skeleton';
@@ -36,5 +35,3 @@ User.propTypes = {
   username: PropTypes.string,
   fullName: PropTypes.string,
 };
-
-User.whyDidYouRender = true;
