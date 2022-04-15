@@ -1,8 +1,10 @@
 import PropTypes from 'prop-types';
 
-export default function Image({ src, caption }) {
+const Image = ({ src, caption }) => {
   return <img src={src} alt={caption} />;
 }
+
+export default Image;
 
 Image.propTypes = {
   src: PropTypes.string.isRequired,
