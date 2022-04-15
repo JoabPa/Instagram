@@ -1,10 +1,10 @@
-import React, { useContext, useState, useEffect } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import FirebaseContext from '../context/firebase';
 import * as ROUTES from '../constants/routes';
 import { doesUsernameExist } from '../services/firebase';
 
-const SignUp = (props) => {
+const SignUp = () => {
   const history = useHistory();
   const { firebase } = useContext(FirebaseContext);
 
@@ -34,18 +34,22 @@ const SignUp = (props) => {
         //authentication
         // -> emailAddress & password & username (displayName)
         await createdUserResult.user.updateProfile({
-          display: username,
+          displayName: username,
         });
 
         // firebase user collection (create a document)
-        await firebase.firestore().collection('users').add({
-          userId: createdUserResult.user.uid,
-          username: username.toLocaleLowerCase(),
-          fullName,
-          emailAddress: emailAddress.toLocaleLowerCase(),
-          following: [],
-          dateCreated: Date.now(),
-        });
+        await firebase
+          .firestore()
+          .collection('users')
+          .add({
+            userId: createdUserResult.user.uid,
+            username: username.toLocaleLowerCase(),
+            fullName,
+            emailAddress: emailAddress.toLocaleLowerCase(),
+            following: ['2'],
+            followers: [],
+            dateCreated: Date.now(),
+          });
 
         history.push(ROUTES.DASHBOARD);
       } catch (error) {
@@ -55,11 +59,9 @@ const SignUp = (props) => {
         setError(error.message);
       }
     } else {
+      setUsername('');
       setError('No luck today :( that username already exist, try another');
     }
-
-    // try {
-    // } catch (error) {}
   };
 
   useEffect(() => {
