@@ -2,6 +2,8 @@ import { useParams, useHistory } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { getUserByUsername } from '../services/firebase';
 import * as ROUTES from '../constants/routes';
+import Header from '../components/header';
+import UserProfile from '../components/profile';
 
 const Profile = () => {
   const { username } = useParams();
@@ -23,7 +25,10 @@ const Profile = () => {
 
   return user?.username ? (
     <div className='bg-gray-background'>
-      <div className='mx-auto max-w-screen-lg'></div>
+      <Header />
+      <div className='mx-auto max-w-screen-lg'>
+        <UserProfile user={user} />
+      </div>
     </div>
   ) : null;
 };
