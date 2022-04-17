@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import {
   updateLoggedInUserFollowing,
   updateFollowedUserFollowers,
-  getUserByUserId,
 } from '../../services/firebase';
 
 const SuggestedProfile = ({
@@ -20,7 +19,6 @@ const SuggestedProfile = ({
     setFollowed(true);
     await updateLoggedInUserFollowing(loggedInUserDocId, profileId, false);
     await updateFollowedUserFollowers(profileDocId, userId, false);
-    const [user] = await getUserByUserId(userId);
   };
 
   return !followed ? (
